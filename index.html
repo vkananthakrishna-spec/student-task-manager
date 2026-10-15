@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Task Manager</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-icon">✓</div><div><strong>Student Task</strong><span>MANAGER</span></div></div>
+      <p class="nav-label">WORKSPACE</p>
+      <button class="nav-item active" data-view="dashboard">▦ <span>Dashboard</span></button>
+      <button class="nav-item" data-view="tasks">☷ <span>My Tasks</span></button>
+      <button class="nav-item" data-view="completed">✓ <span>Completed</span></button>
+      <div class="sidebar-bottom"><div class="tip"><strong>Stay on track ✨</strong><p>Small steps every day lead to big results.</p></div><span class="version">STUDENT EDITION · 1.0</span></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><p class="eyebrow">YOUR PERSONAL WORKSPACE</p><h1 id="pageTitle">Dashboard</h1></div>
+        <button class="primary-btn" id="addTaskTop">＋ Add New Task</button>
+      </header>
+
+      <section id="dashboardView" class="view">
+        <div class="welcome"><div><p class="eyebrow light">WELCOME BACK</p><h2>Make today count.</h2><p>Keep your academic life organized, one task at a time.</p></div><div class="welcome-mark">✦</div></div>
+        <div class="stats">
+          <article class="stat-card"><div class="stat-icon blue">☷</div><p>Total tasks</p><strong id="totalCount">0</strong><small>All your tasks in one place</small></article>
+          <article class="stat-card"><div class="stat-icon orange">◷</div><p>Pending</p><strong id="pendingCount">0</strong><small>Still to be completed</small></article>
+          <article class="stat-card"><div class="stat-icon green">✓</div><p>Completed</p><strong id="completedCount">0</strong><small>Great work so far</small></article>
+          <article class="stat-card"><div class="stat-icon red">⚑</div><p>Overdue</p><strong id="overdueCount">0</strong><small>Tasks past their due date</small></article>
+        </div>
+        <div class="content-grid">
+          <section class="panel"><div class="panel-heading"><div><h3>Upcoming deadlines</h3><p>What needs your attention next</p></div><button class="text-btn" id="viewAllBtn">View all →</button></div><div id="upcomingList" class="upcoming-list"></div></section>
+          <section class="panel progress-panel"><div class="panel-heading"><div><h3>Your progress</h3><p>A little progress is still progress</p></div></div><div class="progress-ring-wrap"><div class="progress-ring" id="progressRing"><div><strong id="progressPercent">0%</strong><span>completed</span></div></div></div><div class="progress-caption"><span><i class="dot green-dot"></i>Completed</span><strong id="progressSummary">0 of 0 tasks</strong></div><div class="progress-track"><div id="progressBar"></div></div></section>
+        </div>
+        <section class="panel recent-panel"><div class="panel-heading"><div><h3>Recently added</h3><p>Your latest tasks</p></div><button class="text-btn" id="recentViewAll">Manage tasks →</button></div><div id="recentList"></div></section>
+      </section>
+
+      <section id="tasksView" class="view hidden">
+        <section class="panel">
+          <div class="panel-heading"><div><h3>My tasks</h3><p>Organize your academic and personal to-dos.</p></div><span id="taskResultCount" class="result-count">0 tasks</span></div>
+          <div class="filters"><label class="searchbox">⌕ <input id="searchInput" placeholder="Search tasks..." /></label><select id="priorityFilter"><option value="all">All priorities</option><option>High</option><option>Medium</option><option>Low</option></select><select id="statusFilter"><option value="all">All statuses</option><option>Pending</option><option>In Progress</option><option>Completed</option></select></div>
+          <div id="taskList"></div>
+        </section>
+      </section>
+
+      <section id="completedView" class="view hidden">
+        <section class="panel"><div class="panel-heading"><div><h3>Completed tasks</h3><p>Look how much you've accomplished.</p></div></div><div id="completedList"></div></section>
+      </section>
+      <footer>Made for students · Keep learning, keep growing <span>Student Task Manager</span></footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="taskModal">
+    <form class="modal" id="taskForm">
+      <div class="modal-heading"><div><p class="eyebrow">TASK DETAILS</p><h2 id="modalTitle">Add a new task</h2></div><button type="button" class="close-btn" id="closeModal" aria-label="Close">×</button></div>
+      <input type="hidden" id="taskId" />
+      <label>Task title <span>*</span><input id="titleInput" required maxlength="90" placeholder="e.g. Complete Mathematics assignment" /></label>
+      <label>Description<textarea id="descriptionInput" rows="3" placeholder="Add a few details (optional)"></textarea></label>
+      <div class="form-row"><label>Priority<select id="priorityInput"><option>Medium</option><option>High</option><option>Low</option></select></label><label>Due date <input id="dueDateInput" type="date" required /></label></div>
+      <label>Status<select id="statusInput"><option>Pending</option><option>In Progress</option><option>Completed</option></select></label>
+      <div class="modal-actions"><button type="button" class="secondary-btn" id="cancelModal">Cancel</button><button type="submit" class="primary-btn">Save task</button></div>
+    </form>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
