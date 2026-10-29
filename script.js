@@ -1,4 +1,5 @@
 const STORAGE_KEY = "studentTaskManager.tasks.v1";
+const PROFILE_PHOTO_KEY = "studentTaskManager.profilePhoto.v1";
 const $ = (id) => document.getElementById(id);
 const today = () => { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0,10); };
 let tasks = loadTasks();
@@ -51,6 +52,65 @@ function showToast(message) {
   const toast=$("toast"); toast.textContent=message; toast.classList.add("show");
   clearTimeout(toastTimer); toastTimer=setTimeout(()=>toast.classList.remove("show"),2500);
 }
+
+function setProfilePhoto(dataUrl) {
+  const image = $("profilePhoto");
+  image.src = dataUrl;
+  image.classList.remove("hidden");
+  $("profilePhotoFallback").classList.add("hidden");
+}
+
+function loadProfilePhoto() {
+  try {
+    const savedPhoto = localStorage.getItem(PROFILE_PHOTO_KEY);
+    if (savedPhoto) setProfilePhoto(savedPhoto);
+  } catch {
+    showToast("Your saved profile photo could not be loaded.");
+  }
+}
+
+function saveProfilePhoto(file) {
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    showToast("Choose an image file for your profile photo.");
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    showToast("Choose an image smaller than 10 MB.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onerror = () => showToast("That photo could not be opened.");
+  reader.onload = () => {
+    const photo = new Image();
+    photo.onerror = () => showToast("That photo could not be opened.");
+    photo.onload = () => {
+      const scale = Math.min(1, 256 / Math.max(photo.width, photo.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(photo.width * scale));
+      canvas.height = Math.max(1, Math.round(photo.height * scale));
+      canvas.getContext("2d").drawImage(photo, 0, 0, canvas.width, canvas.height);
+      const compressedPhoto = canvas.toDataURL("image/jpeg", 0.82);
+      try {
+        localStorage.setItem(PROFILE_PHOTO_KEY, compressedPhoto);
+        setProfilePhoto(compressedPhoto);
+        showToast("Profile photo saved on this device.");
+      } catch {
+        showToast("The photo could not be saved. Try a smaller image.");
+      }
+    };
+    photo.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+$("profilePhotoButton").addEventListener("click", () => $("profilePhotoInput").click());
+$("profilePhotoInput").addEventListener("change", event => {
+  saveProfilePhoto(event.target.files[0]);
+  event.target.value = "";
+});
+loadProfilePhoto();
 function setView(view) {
   ["dashboard","tasks","completed"].forEach(name => $(name+"View").classList.toggle("hidden",name!==view));
   document.querySelectorAll(".nav-item").forEach(btn=>btn.classList.toggle("active",btn.dataset.view===view));

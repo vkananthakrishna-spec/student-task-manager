@@ -26,6 +26,11 @@
   </div>
 
   <div class="topbar-actions">
+    <button type="button" id="profilePhotoButton" class="profile-photo-button" aria-label="Add or change profile photo" title="Add or change profile photo">
+      <img id="profilePhoto" class="profile-photo-image hidden" alt="" />
+      <span id="profilePhotoFallback" aria-hidden="true">Add photo</span>
+    </button>
+    <input type="file" id="profilePhotoInput" class="visually-hidden" accept="image/*" aria-label="Choose profile photo" />
     <button type="button" id="themeToggle" class="theme-toggle">
       🌙 Dark Mode
     </button>

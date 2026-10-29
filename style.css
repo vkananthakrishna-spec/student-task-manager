@@ -123,3 +123,45 @@ body.dark-mode .deadline-upcoming {
 body.dark-mode .progress-track {
   background: #374151;
 }
+
+
+/* Profile photo picker */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.profile-photo-button {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid #dce4f5;
+  border-radius: 50%;
+  background: #edf2ff;
+  color: #3156ce;
+  cursor: pointer;
+  font: 700 9px 'DM Sans', sans-serif;
+}
+
+.profile-photo-button:hover {
+  border-color: var(--blue);
+}
+
+.profile-photo-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-photo-image.hidden {
+  display: none;
+}
