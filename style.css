@@ -42,3 +42,45 @@ body.dark-mode select {
 .theme-toggle:hover {
   background-color: #4f46e5;
 }
+
+/* Deadline labels */
+.deadline-badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.deadline-overdue {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.deadline-today {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.deadline-upcoming {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* Dark mode support */
+body.dark-mode .deadline-overdue {
+  background: #57272c;
+  color: #fecaca;
+}
+
+body.dark-mode .deadline-today {
+  background: #51401f;
+  color: #fde68a;
+}
+
+body.dark-mode .deadline-upcoming {
+  background: #17452f;
+  color: #bbf7d0;
+}

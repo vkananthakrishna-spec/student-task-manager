@@ -17,6 +17,35 @@ function formatDate(date) {
   return new Date(date + "T00:00:00").toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
 }
 function isOverdue(task) { return task.status !== "Completed" && task.dueDate && task.dueDate < today(); }
+function getDeadlineLabel(task) {
+  if (task.status === "Completed" || !task.dueDate) {
+    return "";
+  }
+
+  if (task.dueDate < today()) {
+    return "Overdue";
+  }
+
+  if (task.dueDate === today()) {
+    return "Due Today";
+  }
+
+  return "Upcoming";
+}
+
+function deadlineBadge(task) {
+  const label = getDeadlineLabel(task);
+
+  if (!label) return "";
+
+  const classes = {
+    "Overdue": "deadline-overdue",
+    "Due Today": "deadline-today",
+    "Upcoming": "deadline-upcoming"
+  };
+
+  return `<span class="deadline-badge ${classes[label]}">${label}</span>`;
+}
 function statusClass(status) { return status.replace(/\s+/g,"-"); }
 function showToast(message) {
   const toast=$("toast"); toast.textContent=message; toast.classList.add("show");
@@ -85,7 +114,9 @@ function taskRow(task,showActions=true) {
   return `<tr>
     <td><div class="task-name">${escapeHTML(task.title)}</div>${task.description?`<div class="task-description">${escapeHTML(task.description)}</div>`:""}</td>
     <td><span class="priority ${task.priority}">${task.priority}</span></td>
-    <td>${formatDate(task.dueDate)}</td>
+    <td>${formatDate(task.dueDate)}
+     ${deadlineBadge(task)}
+     </td>
     <td><span class="status ${statusClass(task.status)} ${isOverdue(task)?"overdue":""}">${isOverdue(task)?"Overdue":task.status}</span></td>
     ${showActions?`<td><div class="actions"><button class="icon-btn" title="${task.status==="Completed"?"Mark pending":"Mark completed"}" onclick="toggleComplete('${task.id}')">${task.status==="Completed"?"↶":"✓"}</button><button class="icon-btn" title="Edit task" onclick="editTask('${task.id}')">✎</button><button class="icon-btn delete" title="Delete task" onclick="deleteTask('${task.id}')">×</button></div></td>`:""}
   </tr>`;
@@ -107,7 +138,7 @@ function renderCompleted() {
 }
 function renderUpcoming() {
   const upcoming=tasks.filter(t=>t.status!=="Completed").sort((a,b)=>a.dueDate.localeCompare(b.dueDate)).slice(0,5);
-  $("upcomingList").innerHTML=upcoming.length?upcoming.map(t=>`<div class="upcoming-item"><i class="deadline-dot" style="background:${t.priority==="High"?"#e45d66":t.priority==="Medium"?"#e9a23b":"#1ca779"}"></i><div><div class="upcoming-title">${escapeHTML(t.title)}</div><div class="upcoming-date">${isOverdue(t)?"Overdue · ":"Due "}${formatDate(t.dueDate)}</div></div><span class="priority ${t.priority}">${t.priority}</span></div>`).join(""):`<div class="empty-state"><div class="empty-icon">✓</div><strong>You're all caught up!</strong><p>Add a task whenever something new comes up.</p></div>`;
+  $("upcomingList").innerHTML=upcoming.length?upcoming.map(t=>`<div class="upcoming-item"><i class="deadline-dot" style="background:${t.priority==="High"?"#e45d66":t.priority==="Medium"?"#e9a23b":"#1ca779"}"></i><div><div class="upcoming-title">${escapeHTML(t.title)}</div><div class="upcoming-date">${getDeadlineLabel(t)} · ${formatDate(t.dueDate)}</div></div><span class="priority ${t.priority}">${t.priority}</span></div>`).join(""):`<div class="empty-state"><div class="empty-icon">✓</div><strong>You're all caught up!</strong><p>Add a task whenever something new comes up.</p></div>`;
 }
 function renderRecent() {
   const recent=[...tasks].sort((a,b)=>b.createdAt-a.createdAt).slice(0,4);
