@@ -439,3 +439,9 @@ body.dark-mode .stat-card {
     transition: none !important;
   }
 }
+
+
+/* Keep inactive navigation views out of layout and assistive technology */
+.view[hidden] {
+  display: none !important;
+}

@@ -124,11 +124,22 @@ $("profilePhotoInput").addEventListener("change", event => {
 });
 loadProfilePhoto();
 function setView(view) {
-  ["dashboard","tasks","completed"].forEach(name => $(name+"View").classList.toggle("hidden",name!==view));
-  document.querySelectorAll(".nav-item").forEach(btn=>btn.classList.toggle("active",btn.dataset.view===view));
-  $("pageTitle").textContent = view==="dashboard"?"Dashboard":view==="tasks"?"My Tasks":"Completed Tasks";
-  if(view==="tasks") renderTasks();
-  if(view==="completed") renderCompleted();
+  ["dashboard","tasks","completed"].forEach(name => {
+    const section = $(name + "View");
+    const isActive = name === view;
+    section.hidden = !isActive;
+    section.classList.toggle("hidden", !isActive);
+    section.setAttribute("aria-hidden", String(!isActive));
+  });
+  document.querySelectorAll(".nav-item").forEach(btn => {
+    const isActive = btn.dataset.view === view;
+    btn.classList.toggle("active", isActive);
+    if (isActive) btn.setAttribute("aria-current", "page");
+    else btn.removeAttribute("aria-current");
+  });
+  $("pageTitle").textContent = view === "dashboard" ? "Dashboard" : view === "tasks" ? "My Tasks" : "Completed Tasks";
+  if (view === "tasks") renderTasks();
+  if (view === "completed") renderCompleted();
 }
 document.querySelectorAll(".nav-item").forEach(btn=>btn.addEventListener("click",()=>setView(btn.dataset.view)));
 $("viewAllBtn").addEventListener("click",()=>setView("tasks"));
