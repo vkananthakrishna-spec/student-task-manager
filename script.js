@@ -262,35 +262,30 @@ function renderDashboard() {
   const percent=total?Math.round(completed/total*100):0;
   $("totalCount").textContent=total;$("pendingCount").textContent=pending;$("completedCount").textContent=completed;$("overdueCount").textContent=overdue;
   $("pointsCount").textContent = points;
-  $("progressPercent").textContent=percent+"%";$("progressRing").style.background=`conic-gradient(var(--blue) ${percent}%,#edf0f7 ${percent}%)`;
+  $("progressPercent").textContent=percent+"%";$("progressRing").style.background=`conic-gradient(var(--blue) ${percent}%,var(--progress-track) ${percent}%)`;
   $("progressSummary").textContent=`${completed} of ${total} tasks`;$("progressBar").style.width=percent+"%";$("progressTrack").setAttribute("aria-valuenow", percent);
   renderUpcoming();renderRecent();
 }
 function renderAll(){renderDashboard();renderTasks();renderCompleted();}
 renderAll();
-const themeToggle = document.getElementById("themeToggle");
+const themeSelect = document.getElementById("themeSelect");
+const darkThemes = ["midnight", "forest"];
 
-// Load the saved theme
-const savedTheme = localStorage.getItem("theme");
-
-if (savedTheme === "dark") {
-  document.body.classList.add("dark-mode");
-  themeToggle.textContent = "☀️ Light Mode";
+function applyTheme(theme) {
+  const allowedThemes = ["light", "midnight", "forest", "lavender"];
+  const selectedTheme = allowedThemes.includes(theme) ? theme : "light";
+  document.body.dataset.theme = selectedTheme;
+  document.body.classList.toggle("dark-mode", darkThemes.includes(selectedTheme));
+  themeSelect.value = selectedTheme;
+  localStorage.setItem("theme", selectedTheme);
 }
 
-// Toggle between light and dark mode
-themeToggle.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-
-  const isDarkMode =
-    document.body.classList.contains("dark-mode");
-
-  localStorage.setItem(
-    "theme",
-    isDarkMode ? "dark" : "light"
-  );
-
-  themeToggle.textContent = isDarkMode
-    ? "☀️ Light Mode"
-    : "🌙 Dark Mode";
-});
+let savedTheme = "light";
+try {
+  savedTheme = localStorage.getItem("theme") || "light";
+} catch {
+  savedTheme = "light";
+}
+if (savedTheme === "dark") savedTheme = "midnight";
+applyTheme(savedTheme);
+themeSelect.addEventListener("change", () => applyTheme(themeSelect.value));

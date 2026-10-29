@@ -34,9 +34,15 @@
     <div class="points-badge" aria-label="Your earned points">
       <span aria-hidden="true">&#9733;</span><strong id="pointsCount">0</strong><span>points</span>
     </div>
-    <button type="button" id="themeToggle" class="theme-toggle">
-      🌙 Dark Mode
-    </button>
+    <label class="theme-picker" for="themeSelect">
+      <span>Theme</span>
+      <select id="themeSelect" class="theme-select" aria-label="Choose color theme">
+        <option value="light">Light</option>
+        <option value="midnight">Midnight</option>
+        <option value="forest">Forest</option>
+        <option value="lavender">Lavender</option>
+      </select>
+    </label>
 
     <button type="button" class="primary-btn" id="addTaskTop">
       ＋ Add New Task
