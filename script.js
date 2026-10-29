@@ -149,7 +149,7 @@ function renderDashboard() {
   const percent=total?Math.round(completed/total*100):0;
   $("totalCount").textContent=total;$("pendingCount").textContent=pending;$("completedCount").textContent=completed;$("overdueCount").textContent=overdue;
   $("progressPercent").textContent=percent+"%";$("progressRing").style.background=`conic-gradient(var(--blue) ${percent}%,#edf0f7 ${percent}%)`;
-  $("progressSummary").textContent=`${completed} of ${total} tasks`;$("progressBar").style.width=percent+"%";
+  $("progressSummary").textContent=`${completed} of ${total} tasks`;$("progressBar").style.width=percent+"%";$("progressTrack").setAttribute("aria-valuenow", percent);
   renderUpcoming();renderRecent();
 }
 function renderAll(){renderDashboard();renderTasks();renderCompleted();}

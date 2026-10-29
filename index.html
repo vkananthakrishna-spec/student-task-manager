@@ -47,7 +47,17 @@
         </div>
         <div class="content-grid">
           <section class="panel"><div class="panel-heading"><div><h3>Upcoming deadlines</h3><p>What needs your attention next</p></div><button class="text-btn" id="viewAllBtn">View all →</button></div><div id="upcomingList" class="upcoming-list"></div></section>
-          <section class="panel progress-panel"><div class="panel-heading"><div><h3>Your progress</h3><p>A little progress is still progress</p></div></div><div class="progress-ring-wrap"><div class="progress-ring" id="progressRing"><div><strong id="progressPercent">0%</strong><span>completed</span></div></div></div><div class="progress-caption"><span><i class="dot green-dot"></i>Completed</span><strong id="progressSummary">0 of 0 tasks</strong></div><div class="progress-track"><div id="progressBar"></div></div></section>
+          <section class="panel progress-panel"><div class="panel-heading"><div><h3>Your progress</h3><p>A little progress is still progress</p></div></div><div class="progress-ring-wrap"><div class="progress-ring" id="progressRing"><div><strong id="progressPercent">0%</strong><span>completed</span></div></div></div><div class="progress-caption"><span><i class="dot green-dot"></i>Completed</span><strong id="progressSummary">0 of 0 tasks</strong></div><div
+  class="progress-track"
+  id="progressTrack"
+  role="progressbar"
+  aria-label="Task completion progress"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  aria-valuenow="0"
+>
+  <div id="progressBar"></div>
+</div></div></section>
         </div>
         <section class="panel recent-panel"><div class="panel-heading"><div><h3>Recently added</h3><p>Your latest tasks</p></div><button class="text-btn" id="recentViewAll">Manage tasks →</button></div><div id="recentList"></div></section>
       </section>
