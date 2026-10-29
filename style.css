@@ -84,3 +84,21 @@ body.dark-mode .deadline-upcoming {
   background: #17452f;
   color: #bbf7d0;
 }
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.topbar-actions button {
+  width: auto;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .topbar-actions {
+    gap: 8px;
+  }
+}
