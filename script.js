@@ -1,8 +1,11 @@
 const STORAGE_KEY = "studentTaskManager.tasks.v1";
 const PROFILE_PHOTO_KEY = "studentTaskManager.profilePhoto.v1";
+const POINTS_STORAGE_KEY = "studentTaskManager.points.v1";
+const ON_TIME_POINTS = 10;
 const $ = (id) => document.getElementById(id);
 const today = () => { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0,10); };
 let tasks = loadTasks();
+let points = loadPoints();
 let toastTimer;
 
 function loadTasks() {
@@ -10,6 +13,15 @@ function loadTasks() {
   catch { return []; }
 }
 function saveTasks() { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); }
+function loadPoints() {
+  try {
+    const savedPoints = Number(localStorage.getItem(POINTS_STORAGE_KEY) || 0);
+    return Number.isFinite(savedPoints) ? Math.max(0, savedPoints) : 0;
+  } catch {
+    return 0;
+  }
+}
+function savePoints() { localStorage.setItem(POINTS_STORAGE_KEY, String(points)); }
 function escapeHTML(value="") {
   return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
@@ -156,8 +168,26 @@ $("taskForm").addEventListener("submit",e=>{
     updatedAt:Date.now()
   };
   if(!task.title){showToast("Please enter a task title.");return;}
+  const completedNow = task.status === "Completed" && existing?.status !== "Completed";
+  const earnedPoints = completedNow && !existing?.pointsAwarded && task.dueDate >= today();
+  task.completedAt = task.status === "Completed"
+    ? (completedNow ? Date.now() : existing?.completedAt || null)
+    : null;
+  task.pointsAwarded = Boolean(existing?.pointsAwarded || earnedPoints);
+  if (earnedPoints) {
+    points += ON_TIME_POINTS;
+    savePoints();
+  }
   if(id) tasks=tasks.map(t=>t.id===id?task:t); else tasks.push(task);
-  saveTasks();closeModal();renderAll();showToast(id?"Task updated successfully":"Task added successfully");
+  saveTasks();closeModal();renderAll();
+  const message = earnedPoints
+    ? "Completed on time! You earned " + ON_TIME_POINTS + " points."
+    : completedNow && task.pointsAwarded
+      ? "Task completed. Points were already awarded."
+      : completedNow
+        ? "Task completed after its due date. No points earned."
+        : id ? "Task updated successfully" : "Task added successfully";
+  showToast(message);
 });
 function editTask(id) { const task=tasks.find(t=>t.id===id); if(task)openModal(task); }
 function deleteTask(id) {
@@ -167,8 +197,31 @@ function deleteTask(id) {
   tasks=tasks.filter(t=>t.id!==id);saveTasks();renderAll();showToast("Task deleted");
 }
 function toggleComplete(id) {
-  tasks=tasks.map(t=>t.id===id?{...t,status:t.status==="Completed"?"Pending":"Completed",updatedAt:Date.now()}:t);
-  saveTasks();renderAll();showToast("Task status updated");
+  const task = tasks.find(item => item.id === id);
+  if (!task) return;
+  const completing = task.status !== "Completed";
+  const completedAt = completing ? Date.now() : null;
+  const earnedPoints = completing && !task.pointsAwarded && task.dueDate >= today();
+  if (earnedPoints) {
+    points += ON_TIME_POINTS;
+    savePoints();
+  }
+  tasks = tasks.map(item => item.id === id ? {
+    ...item,
+    status: completing ? "Completed" : "Pending",
+    updatedAt: Date.now(),
+    completedAt,
+    pointsAwarded: Boolean(item.pointsAwarded || earnedPoints)
+  } : item);
+  saveTasks();
+  renderAll();
+  showToast(earnedPoints
+    ? "Completed on time! You earned " + ON_TIME_POINTS + " points."
+    : completing && task.pointsAwarded
+      ? "Task completed. Points were already awarded."
+      : completing
+        ? "Task completed after its due date. No points earned."
+        : "Task status updated");
 }
 function taskRow(task,showActions=true) {
   return `<tr>
@@ -208,6 +261,7 @@ function renderDashboard() {
   const total=tasks.length,completed=tasks.filter(t=>t.status==="Completed").length,pending=tasks.filter(t=>t.status!=="Completed").length,overdue=tasks.filter(isOverdue).length;
   const percent=total?Math.round(completed/total*100):0;
   $("totalCount").textContent=total;$("pendingCount").textContent=pending;$("completedCount").textContent=completed;$("overdueCount").textContent=overdue;
+  $("pointsCount").textContent = points;
   $("progressPercent").textContent=percent+"%";$("progressRing").style.background=`conic-gradient(var(--blue) ${percent}%,#edf0f7 ${percent}%)`;
   $("progressSummary").textContent=`${completed} of ${total} tasks`;$("progressBar").style.width=percent+"%";$("progressTrack").setAttribute("aria-valuenow", percent);
   renderUpcoming();renderRecent();

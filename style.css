@@ -165,3 +165,27 @@ body.dark-mode .progress-track {
 .profile-photo-image.hidden {
   display: none;
 }
+
+
+/* On-time completion points */
+.points-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 13px;
+  border: 1px solid #f1dfaa;
+  border-radius: 9px;
+  background: #fff8e7;
+  color: #8b6417;
+  font-size: 12px;
+}
+
+.points-badge strong {
+  font-size: 14px;
+}
+
+body.dark-mode .points-badge {
+  background: #493a1d;
+  border-color: #6f5725;
+  color: #fde68a;
+}
