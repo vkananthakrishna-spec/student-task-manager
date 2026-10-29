@@ -129,6 +129,7 @@ function setView(view) {
     const isActive = name === view;
     section.hidden = !isActive;
     section.classList.toggle("hidden", !isActive);
+    section.style.display = isActive ? "block" : "none";
     section.setAttribute("aria-hidden", String(!isActive));
   });
   document.querySelectorAll(".nav-item").forEach(btn => {
