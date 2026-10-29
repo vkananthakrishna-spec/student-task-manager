@@ -3,9 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <button id="themeToggle" class="theme-toggle">
-  🌙 Dark Mode
-</button>
   <title>Student Task Manager</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -23,7 +20,13 @@
     <main class="main">
       <header class="topbar">
         <div><p class="eyebrow">YOUR PERSONAL WORKSPACE</p><h1 id="pageTitle">Dashboard</h1></div>
-        <button class="primary-btn" id="addTaskTop">＋ Add New Task</button>
+        <button class="primary-btn" id="addTaskTop"><button id="themeToggle" class="theme-toggle">
+        🌙 Dark Mode
+        </button>
+
+        <button class="primary-btn" id="addTaskTop">
+        ＋ Add New Task
+        </button>
       </header>
 
       <section id="dashboardView" class="view">
